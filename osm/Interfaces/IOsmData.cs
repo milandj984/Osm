@@ -1,15 +1,15 @@
 ﻿using System.Numerics;
 
-namespace osm.Models.CollectOsmData
+namespace osm.Interfaces
 {
-	public class OsmDataModel
+	public interface IOsmData
 	{
 		public BigInteger OsmId { get; set; }
-		
+
 		public string Name { get; set; }
-		
+
 		public string RefName { get; set; }
-		
+
 		public string Geometry { get; set; }
 	}
 }

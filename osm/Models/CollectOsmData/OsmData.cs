@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
+using osm.Interfaces;
 using OsmSharp;
 using OsmSharp.Geo;
 using OsmSharp.Geo.Streams;
@@ -26,30 +27,25 @@ namespace osm.Models.CollectOsmData
 			_filePath = filePath;
 		}
 
-		public IEnumerable<OsmDataModel> GetData()
+		public IEnumerable<T> GetData<T>() where T : IOsmData, new()
 		{
-			using (FileStream fileStream = File.OpenRead(_filePath))
-			{
-				using (PBFOsmStreamSource source = new PBFOsmStreamSource(fileStream))
-				{
-					IEnumerable<OsmGeo> filtered = source.Where(osm => osm.Type == OsmGeoType.Node || (osm.Type == OsmGeoType.Way && osm.Tags.Contains(Type, SubType)));
-					
-					using (IFeatureStreamSource features = filtered.ToFeatureSource())
-					{
-						IEnumerable<IFeature> lines = features.Where(f => f.Geometry is LineString);
+			using FileStream fileStream = File.OpenRead(_filePath);
+			using PBFOsmStreamSource source = new PBFOsmStreamSource(fileStream);
+			
+			IEnumerable<OsmGeo> filtered = source.Where(osm => osm.Type == OsmGeoType.Node || (osm.Type == OsmGeoType.Way && osm.Tags.Contains(Type, SubType)));
 
-						foreach (IFeature line in lines)
-						{
-							yield return new OsmDataModel()
-							{
-								OsmId = BigInteger.Parse(line.Attributes.GetOptionalValue("id")?.ToString() ?? "0"),
-								Geometry = $"SRID={Srid};" + line.Geometry,
-								Name = line.Attributes.GetOptionalValue("int_ref")?.ToString() ?? "/N",
-								RefName = line.Attributes.GetOptionalValue("ref")?.ToString() ?? "/N"
-							};
-						}
-					}
-				}
+			using IFeatureStreamSource features = filtered.ToFeatureSource();
+			IEnumerable<IFeature> lines = features.Where(f => f.Geometry is LineString);
+
+			foreach (IFeature line in lines)
+			{
+				yield return new T()
+				{
+					OsmId = BigInteger.Parse(line.Attributes.GetOptionalValue("id")?.ToString() ?? "0"),
+					Geometry = $"SRID={Srid};" + line.Geometry,
+					Name = line.Attributes.GetOptionalValue("int_ref")?.ToString() ?? "\\N",
+					RefName = line.Attributes.GetOptionalValue("ref")?.ToString() ?? "\\N"
+				};
 			}
 		}
 	}

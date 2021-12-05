@@ -1,21 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using osm.Models.CollectOsmData;
+using osm.Models.CollectOsmData.Europe;
 
 namespace osm
 {
 	class Program
 	{
-		static void Main(string[] args)
+		static async Task Main(string[] args)
 		{
-			string filePath = @"C:\Users\mdj\Desktop\serbia-latest.osm.pbf";
-
-			OsmData osmData = new OsmData(filePath);
-			IEnumerable<OsmDataModel> collectedData = osmData.GetData();
-
-			foreach (OsmDataModel osmDataModel in collectedData)
-			{
-				
-			}
+			const string filePath = @"C:\Users\mdj\Desktop\Osm\europe-serbia-latest.osm.pbf";
+			
+			Startup startup = new Startup(filePath);
+			await startup.Initiate();
 		}
 	}
 }
