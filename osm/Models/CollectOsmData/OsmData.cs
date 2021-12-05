@@ -4,13 +4,12 @@ using System.Linq;
 using System.Numerics;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
-using osm.CollectOsmData.Models;
 using OsmSharp;
 using OsmSharp.Geo;
 using OsmSharp.Geo.Streams;
 using OsmSharp.Streams;
 
-namespace osm.CollectOsmData
+namespace osm.Models.CollectOsmData
 {
 	public class OsmData
 	{

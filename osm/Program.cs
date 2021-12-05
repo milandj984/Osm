@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using osm.CollectOsmData;
-using osm.CollectOsmData.Models;
+using osm.Models.CollectOsmData;
 
 namespace osm
 {

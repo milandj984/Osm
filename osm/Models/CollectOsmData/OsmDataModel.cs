@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace osm.CollectOsmData.Models
+namespace osm.Models.CollectOsmData
 {
 	public class OsmDataModel
 	{
