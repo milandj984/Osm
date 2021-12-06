@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using osm.Models.CollectOsmData;
-using osm.Models.CollectOsmData.Europe;
+﻿using System.Threading.Tasks;
 
 namespace osm
 {
@@ -11,7 +6,7 @@ namespace osm
 	{
 		static async Task Main(string[] args)
 		{
-			const string filePath = @"C:\Users\mdj\Desktop\Osm\europe-serbia-latest.osm.pbf";
+			const string filePath = @"C:\Milan\Work\Charging-stations\Osm\europe-germany-latest.osm.pbf";
 			
 			Startup startup = new Startup(filePath);
 			await startup.Initiate();

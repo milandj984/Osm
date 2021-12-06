@@ -1,17 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using osm.Configurations;
 using osm.Interfaces;
+using osm.Models.CollectOsmData;
 
 namespace osm.Models.CreateCopyFile
 {
-	public class CreateCopyFile<TData, TTableDefinition> where TData : class where TTableDefinition : ITableDefinition
+	public class CreateCopyFile<T> where T : ITableDefinition
 	{
 		private readonly string _outputPath;
 		
-		private readonly IEnumerable<TData> _data;
+		private readonly IEnumerable<ContinentModel> _data;
 
 		private readonly string _fileName;
 
@@ -23,7 +25,7 @@ namespace osm.Models.CreateCopyFile
 		
 		private readonly string _geometryIndexNameIndex;
 
-		public CreateCopyFile(string outputPath, IEnumerable<TData> data, TTableDefinition tableDefinition, string continentName)
+		public CreateCopyFile(string outputPath, IEnumerable<ContinentModel> data, T tableDefinition, string continentName)
 		{
 			_outputPath = outputPath;
 			_data = data;
@@ -56,13 +58,14 @@ SET row_security = off;
 ";
 			builder.Append(headers);
 			
-			string preOperations = $"TRUNCATE TABLE {_schemaName}.{_tableName};\nDROP INDEX {_schemaName}.{_geometryIndexNameIndex};\n\n";
+			// string preOperations = $"TRUNCATE TABLE {_schemaName}.{_tableName};\nDROP INDEX {_schemaName}.{_geometryIndexNameIndex};\n\n";
+			string preOperations = $"DROP INDEX {_schemaName}.{_geometryIndexNameIndex};\n\n";
 			builder.Append(preOperations);
 			
 			string copyDeclaration = $"COPY {_schemaName}.{_tableName} {_columns} FROM stdin;\n";
 			builder.Append(copyDeclaration);
 
-			foreach (TData osmData in _data)
+			foreach (ContinentModel osmData in _data)
 			{
 				builder.Append(osmData);
 			}
@@ -73,6 +76,8 @@ SET row_security = off;
 			
 			await writer.WriteAsync(builder.ToString());
 			writer.Close();
+			
+			Console.WriteLine($"{_fileName} created");
 
 			return filePath;
 		}

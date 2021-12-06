@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using osm.Configurations;
 using osm.Interfaces;
 
 namespace osm
@@ -26,7 +28,7 @@ namespace osm
 		private Type GetCorrespondingModelOrDefault()
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly();
-			IEnumerable<Type> classTypes = assembly.GetTypes().Where(t => t.IsClass && (t.Namespace?.StartsWith("osm.Models.CollectOsmData") ?? false));
+			IEnumerable<Type> classTypes = assembly.GetTypes().Where(t => t.IsClass && t.Namespace == "osm.Models.CollectOsmData");
 
 			foreach (Type classType in classTypes)
 			{
@@ -49,8 +51,13 @@ namespace osm
 			}
 			else
 			{
+				// Read osm file and write data to sql file
 				IContinent instance = Activator.CreateInstance(classType, _filePath, _folderPath) as IContinent;
-				await instance!.MigrateAsync();
+				string sqlFilePath = await instance!.WriteToCopySqlFileAsync();
+
+				// Write sql file to database
+				string command = $"/C set PGPASSWORD={PostgreSql.Password}&psql -U {PostgreSql.User} -h {PostgreSql.Host} -p {PostgreSql.Port} -f {sqlFilePath}";
+				Process.Start("cmd.exe", command)!.WaitForExit();
 			}
 		}
 	}

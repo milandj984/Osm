@@ -4,6 +4,6 @@ namespace osm.Interfaces
 {
 	public interface IContinent
 	{
-		public Task MigrateAsync();
+		public Task<string> WriteToCopySqlFileAsync();
 	}
 }

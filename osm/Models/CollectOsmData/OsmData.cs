@@ -4,7 +4,6 @@ using System.Linq;
 using System.Numerics;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
-using osm.Interfaces;
 using OsmSharp;
 using OsmSharp.Geo;
 using OsmSharp.Geo.Streams;
@@ -27,19 +26,34 @@ namespace osm.Models.CollectOsmData
 			_filePath = filePath;
 		}
 
-		public IEnumerable<T> GetData<T>() where T : IOsmData, new()
+		private static bool Condition(OsmGeo osm)
+		{
+			if (osm.Type == OsmGeoType.Node || (osm.Type == OsmGeoType.Way && osm.Tags.Contains(Type, SubType)))
+			{
+				if (osm.Tags.ContainsKey("id"))
+				{
+					osm.Tags.RemoveKey("id");
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public IEnumerable<ContinentModel> GetData()
 		{
 			using FileStream fileStream = File.OpenRead(_filePath);
 			using PBFOsmStreamSource source = new PBFOsmStreamSource(fileStream);
 			
-			IEnumerable<OsmGeo> filtered = source.Where(osm => osm.Type == OsmGeoType.Node || (osm.Type == OsmGeoType.Way && osm.Tags.Contains(Type, SubType)));
+			IEnumerable<OsmGeo> filtered = source.Where(Condition);
 
 			using IFeatureStreamSource features = filtered.ToFeatureSource();
 			IEnumerable<IFeature> lines = features.Where(f => f.Geometry is LineString);
 
 			foreach (IFeature line in lines)
 			{
-				yield return new T()
+				yield return new ContinentModel()
 				{
 					OsmId = BigInteger.Parse(line.Attributes.GetOptionalValue("id")?.ToString() ?? "0"),
 					Geometry = $"SRID={Srid};" + line.Geometry,

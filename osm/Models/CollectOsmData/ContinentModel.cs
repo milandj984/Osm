@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
 using osm.Interfaces;
 
-namespace osm.Models.CollectOsmData.Europe
+namespace osm.Models.CollectOsmData
 {
-	public class EuropeModel : IOsmData
+	public class ContinentModel
 	{
 		public BigInteger OsmId { get; set; }
 		
