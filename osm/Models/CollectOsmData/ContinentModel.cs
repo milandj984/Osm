@@ -11,11 +11,15 @@ namespace osm.Models.CollectOsmData
 		
 		public string RefName { get; set; }
 		
+		public string Type { get; set; }
+		
+		public string SubType { get; set; }
+		
 		public string Geometry { get; set; }
 
 		public override string ToString()
 		{
-			return $"{OsmId}\t{Name}\t{RefName}\t{Geometry}\n";
+			return $"{OsmId}\t{Name}\t{RefName}\t{Type}\t{SubType}\t{Geometry}\n";
 		}
 	}
 }

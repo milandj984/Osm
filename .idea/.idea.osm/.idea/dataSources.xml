@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/OsmDb</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="emob_charging_stations@p3emobcharging.database.windows.net" uuid="c76c4871-1bd9-499c-90ac-d94b289a23e9">
+      <driver-ref>azure.ms</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
+      <jdbc-url>jdbc:sqlserver://p3emobcharging.database.windows.net:1433;database=emob_charging_stations</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

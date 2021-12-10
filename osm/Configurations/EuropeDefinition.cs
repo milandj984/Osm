@@ -8,7 +8,7 @@ namespace osm.Configurations
 		
 		public string TableName => "europe";
 		
-		public string Columns => "(osm_id, name, ref_name, geometry)";
+		public string Columns => "(osm_id, name, ref_name, type, sub_type, geometry)";
 
 		public string GeometryIndexName => "idx_gist_europe_geometry";
 	}

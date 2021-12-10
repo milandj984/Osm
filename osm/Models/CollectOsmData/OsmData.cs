@@ -19,6 +19,8 @@ namespace osm.Models.CollectOsmData
 		
 		private const string SubType = "motorway";
 		
+		private const string SubType2 = "motorway_link";
+		
 		private const string Srid = "4326";
 
 		public OsmData(string filePath)
@@ -28,7 +30,7 @@ namespace osm.Models.CollectOsmData
 
 		private static bool Condition(OsmGeo osm)
 		{
-			if (osm.Type == OsmGeoType.Node || (osm.Type == OsmGeoType.Way && osm.Tags.Contains(Type, SubType)))
+			if (osm.Type == OsmGeoType.Node || (osm.Type == OsmGeoType.Way && (osm.Tags.Contains(Type, SubType) || osm.Tags.Contains(Type, SubType2))))
 			{
 				if (osm.Tags.ContainsKey("id"))
 				{
@@ -58,7 +60,9 @@ namespace osm.Models.CollectOsmData
 					OsmId = BigInteger.Parse(line.Attributes.GetOptionalValue("id")?.ToString() ?? "0"),
 					Geometry = $"SRID={Srid};" + line.Geometry,
 					Name = line.Attributes.GetOptionalValue("int_ref")?.ToString() ?? "\\N",
-					RefName = line.Attributes.GetOptionalValue("ref")?.ToString() ?? "\\N"
+					RefName = line.Attributes.GetOptionalValue("ref")?.ToString() ?? "\\N",
+					Type = Type,
+					SubType = line.Attributes.GetOptionalValue(Type)?.ToString() ?? "\\N",
 				};
 			}
 		}
