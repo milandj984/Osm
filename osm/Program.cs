@@ -6,7 +6,7 @@ namespace osm
 	{
 		static async Task Main(string[] args)
 		{
-			const string filePath = @"C:\Milan\Work\Charging-stations\Osm\europe-germany-latest.osm.pbf";
+			const string filePath = @"C:\Milan\Work\Charging-stations\Osm\europe-latest.osm.pbf";
 			
 			Startup startup = new Startup(filePath);
 			await startup.Initiate();

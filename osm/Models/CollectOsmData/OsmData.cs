@@ -19,7 +19,7 @@ namespace osm.Models.CollectOsmData
 		
 		private const string SubType = "motorway";
 		
-		private const string SubType2 = "motorway_link";
+		// private const string SubType2 = "motorway_link";
 		
 		private const string Srid = "4326";
 
@@ -30,7 +30,8 @@ namespace osm.Models.CollectOsmData
 
 		private static bool Condition(OsmGeo osm)
 		{
-			if (osm.Type == OsmGeoType.Node || (osm.Type == OsmGeoType.Way && (osm.Tags.Contains(Type, SubType) || osm.Tags.Contains(Type, SubType2))))
+			// if (osm.Type == OsmGeoType.Node || (osm.Type == OsmGeoType.Way && (osm.Tags.Contains(Type, SubType) || osm.Tags.Contains(Type, SubType2))))
+			if (osm.Type == OsmGeoType.Node || (osm.Type == OsmGeoType.Way && osm.Tags.Contains(Type, SubType)))
 			{
 				if (osm.Tags.ContainsKey("id"))
 				{
